@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+img {
+  width: 100%;
+}
+
+.model {
+  background-color: lightgray;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.example {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}

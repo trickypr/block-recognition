@@ -4,10 +4,50 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Block identifier model trainer</title>
+
+    <link rel="stylesheet" href="./index.css" />
   </head>
   <body>
-    <img src="../public/IMG_0098.png" id="testingImage" />
+    <div class="container">
+      <div class="usage">
+        <h1>Block identifier model trainer</h1>
+        <p>
+          This program is responsible for training a classifier for lego technic
+          parts. Under the hood it uses mobilenet to extract features from the
+          provided image and the k-nearest neighbor algorithm to find the type
+          of block the provided image is closest to. The source code for this
+          project, along with the dataset is
+          <a href="https://github.com/trickypr/block-recognition/tree/main/js"
+            >available on github</a
+          >
+          under GPL v3. Press the button below to start training the model:
+        </p>
+
+        <button id="train_start">Train</button>
+
+        <p>
+          Please note that the training process is mostly network bound. The
+          learning for a particular example happens after an example has loaded,
+          so you will not experience high cpu usage.
+        </p>
+      </div>
+      <h2>Example</h2>
+
+      <div class="example">
+        <img src="../public/IMG_0098.png" id="testingImage" />
+        <div class="output model" id="exampleOutput">
+          Waiting for model to run
+        </div>
+      </div>
+
+      <h2>Model output:</h2>
+      <p>
+        Can be loaded into tensorflowjs on any device, including a raspberry pi.
+      </p>
+
+      <div class="model" id="model">Waiting for training to complete...</div>
+    </div>
 
     <script src="./ml.ts" type="module"></script>
   </body>

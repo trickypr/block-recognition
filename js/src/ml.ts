@@ -10,12 +10,16 @@ const sleep = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 async function app() {
+  const modelOutput = document.getElementById("model");
+
   console.log("Loading mobilenet...");
+  modelOutput.innerHTML += "<br>Loading mobilenet...";
 
   const netPromise = load();
   const classifier = create();
   net = await netPromise;
   console.log("Successfully loaded model");
+  modelOutput.innerHTML += "<br>Mobilenet loaded";
 
   console.log(catagories);
 
@@ -57,6 +61,7 @@ async function app() {
     }
   }
 
+  modelOutput.innerHTML += "<br>Downloading dataset and training...";
   await Promise.all(classExamples);
 
   function confidence(confidence: { [label: string]: number }): string {
@@ -69,6 +74,15 @@ async function app() {
     return out;
   }
 
+  // Provide the model output to the user
+  modelOutput.innerHTML = `${JSON.stringify(
+    Object.entries(classifier.getClassifierDataset()).map(([label, data]) => [
+      label,
+      Array.from(data.dataSync()),
+      data.shape,
+    ])
+  )}`;
+
   const testEl = document.getElementById("testingImage") as HTMLImageElement;
   const testImg = tf.browser.fromPixels(testEl);
 
@@ -77,12 +91,28 @@ async function app() {
   // Get the most likely class and confidence from the classifier module.
   const result = await classifier.predictClass(activation);
 
+  const exampleEl = document.getElementById("exampleOutput");
+
   console.log(
     `Prediction:  ${classes.get(result.label)}
 Probability: ${confidence(result.confidences)}`
   );
 
+  exampleEl.innerHTML = `<pre>Prediction:  ${classes.get(result.label)}
+Probability: ${confidence(result.confidences)}</pre>`;
+
   console.log(classifier.getClassifierDataset());
 }
 
-app();
+const trainingButton = document.getElementById(
+  "train_start"
+) as HTMLButtonElement;
+trainingButton.addEventListener("click", async () => {
+  trainingButton.disabled = true;
+  trainingButton.innerText =
+    "Training in progress. Please leave this tab in the foreground for around 5 minutes";
+
+  await app();
+
+  trainingButton.style.display = "none";
+});
