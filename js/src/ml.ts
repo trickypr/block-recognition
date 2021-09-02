@@ -2,7 +2,7 @@ import * as tf from "@tensorflow/tfjs";
 import { load, MobileNet } from "@tensorflow-models/mobilenet";
 import { create } from "@tensorflow-models/knn-classifier";
 
-import catagories from "../public/contents.json";
+import catagories from "./public/contents.json";
 
 let net: MobileNet;
 
@@ -24,7 +24,7 @@ async function app() {
   console.log(catagories);
 
   async function addItem(classId: number, path: string) {
-    const url = path.replace("../", "/");
+    const url = path.replace("../src/", "/");
 
     const img = await new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new Image();
