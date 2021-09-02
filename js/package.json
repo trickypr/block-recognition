@@ -1,10 +1,10 @@
 {
   "name": "js",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
     "dev": "parcel src/index.html public/**/*",
-    "regen": "cd scripts && node loadFolderStructure && cd .."
+    "regen": "cd scripts && node loadFolderStructure && cd ..",
+    "build": "parcel build src/index.html public/**/*"
   },
   "license": "MIT",
   "devDependencies": {
@@ -13,6 +13,9 @@
     "parcel": "^2.0.0-rc.0"
   },
   "dependencies": {
+    "@tensorflow-models/knn-classifier": "^1.2.2",
+    "@tensorflow-models/mobilenet": "^2.1.0",
+    "@tensorflow/tfjs": "^3.9.0",
     "@tensorflow/tfjs-backend-webgl": "^3.9.0"
   }
 }
