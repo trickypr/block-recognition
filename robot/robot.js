@@ -24,7 +24,7 @@ function captureImage() {
  * to allow the robot to do other stuff (e.g. move the belt) in the background
  */
 async function classify(imagePath) {
-  // TODO: Classification
+  // Load the image from the local file system and convert it to a tensor (nodejs only)
   const imageBuffer = fs.readFileSync(imagePath);
   const image = tfnode.node.decodeImage(imageBuffer);
 
