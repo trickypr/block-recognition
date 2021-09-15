@@ -15,7 +15,7 @@ class FeedbackConsole {
   }
 
   append(text: string) {
-    this.el.innerHTML += text;
+    this.el.innerHTML += `<br>${text}`;
     console.log(text);
   }
 
