@@ -163,6 +163,11 @@ async function captureImage() {
  * This function will be responsible for classifying the image. It is asynchronous
  * to allow the robot to do other stuff (e.g. move the belt) in the background
  *
+ * As this program is running on the main thread and is fairly performance heavy,
+ * it may freeze the nodejs event loop. I have not gotten a chance to test this,
+ * however, if it happens, this function should be moved to another thread. See:
+ * https://stackoverflow.com/questions/60098884/how-to-use-multi-threads-or-processes-in-nodejs
+ *
  * @param {string} imagePath An option for the path to the image
  */
 async function classify(imagePath) {
