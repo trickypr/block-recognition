@@ -38,17 +38,12 @@ const CLASSIFIER_LOCATION = "path/to/classifier.json";
 /**
  * The pin that the motor for rotating the conveyer belt is connected to
  */
-const BELT_MOTOR_PIN = 1;
+const BELT_MOTOR_PINS = [1, 2, 3, 4];
 
 /**
- * The sensor pin for the belt
+ * The amount of times the stepper needs to run to increment once
  */
-const BELT_SENSOR_PIN = 1;
-
-/**
- * The binary value on the belt sensor pin when the belt should stop
- */
-const BELT_SENSOR_STOP = Gpio.HIGH;
+const BELT_FULL_ROTATION = 50;
 
 /**
  * The pin the servo motor for spinning the bucket will be connected to
@@ -183,35 +178,38 @@ async function classify(imagePath) {
 }
 
 async function incrementBelt() {
-  // Create an instance of each gpio required
-  const beltMotor = new Gpio(BELT_MOTOR_PIN, "out");
-  const beltSensor = new Gpio(BELT_SENSOR_PIN, "in");
+  // This code has been adapted from the freenove tutorial
+  // https://raw.githubusercontent.com/Freenove/Freenove_Ultimate_Starter_Kit/master/Tutorial.pdf
+  const beltMotorControl = [];
 
-  // Create a variable to keep track of the belt sensor's state
-  let state = "waiting";
-
-  // Start the motor
-  beltMotor.writeSync(1);
-
-  // Watch the belt sensor
-  beltSensor.watch((err, value) => {
-    if (value == BELT_SENSOR_STOP && state != "waiting") {
-      state = "done";
-    }
-
-    if (value == (BELT_SENSOR_STOP ^ 1) && state == "waiting") {
-      state = "moving";
-    }
-  });
-
-  // Wait for belt sensor
-  while (state != "done") {
-    // Sleep program to prevent overloading the CPU
-    await new Promise((resolve) => setTimeout(resolve, 10));
+  for (const pin of BELT_MOTOR_PINS) {
+    beltMotorControl.push(new Gpio(pin, "out"));
   }
 
-  // Stop the motor
-  beltMotor.writeSync(0);
+  // Define a variable, use four low bit to indicate the state of port
+  moveBeltOne();
+
+  // Move belt the defined number of times
+  for (let i = 0; i < BELT_FULL_ROTATION; i++) {
+    moveBeltOne();
+  }
+
+  function moveBeltOne() {
+    let out = 0x01;
+    // Decide the shift direction according to the rotation direction
+    if (false) {
+      // ring shift left
+      out != 0x08 ? (out = out << 1) : (out = 0x01);
+    } else {
+      // ring shift right
+      out != 0x01 ? (out = out >> 1) : (out = 0x08);
+    }
+
+    // Output signal to each port
+    for (let i = 0; i < 4; i++) {
+      beltMotorControl[i].writeSync(out & (0x01 << i) ? Gpio.HIGH : Gpio.LOW);
+    }
+  }
 }
 
 let servo = new PWMGpio(SERVO_PIN, { mode: PWMGpio.OUTPUT });
