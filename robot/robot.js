@@ -16,6 +16,7 @@ const tfnode = require("@tensorflow/tfjs-node");
 
 // Raspberry Pi specific utilities
 const { Gpio } = require("onoff");
+const PWMGpio = require("pigpio").Gpio;
 
 // Custom utilities for this program
 const { execPromise, Option } = require("./utils");
@@ -53,6 +54,11 @@ const BELT_SENSOR_STOP = Gpio.HIGH;
  * The pin the servo motor for spinning the bucket will be connected to
  */
 const SERVO_PIN = 1;
+
+/**
+ * How long it takes in seconds for the servo to go from 0 to 180 degrees (ms)
+ */
+const SERVO_TIMEOUT = 2000;
 
 /**
  * The angles that the servo should go to for each category
@@ -117,8 +123,6 @@ async function main() {
   }
 }
 
-main();
-
 // =============================================================================
 // Step functions
 
@@ -170,7 +174,7 @@ async function classify(imagePath) {
   // pretrained classifier
   const activation = (await net).infer(image);
 
-  return await classifier.predictClass(activation);
+  return (await classifier.predictClass(activation)).label;
 }
 
 async function incrementBelt() {
@@ -205,6 +209,29 @@ async function incrementBelt() {
   beltMotor.writeSync(0);
 }
 
+let servo = new PWMGpio(SERVO_PIN, { mode: PWMGpio.OUTPUT });
+
+/**
+ *
+ * @param {string} targetClass The class to rotate to
+ */
 async function rotateBucket(targetClass) {
-  // TODO: Rotate bucket (requires hardware)
+  // Get the angle for the target class
+  const angle = SERVO_ANGLES[targetClass];
+
+  // Check the angle
+  if (angle < 0 || angle > 180) {
+    throw new Error("Invalid angle");
+  }
+
+  // Calculate target pulse width for servo
+  const targetPulseWidth = (angle / 180) * 2000 + 500;
+
+  // Write
+  servo.servoWrite(targetPulseWidth);
+
+  await new Promise((resolve) => setTimeout(resolve, SERVO_TIMEOUT));
 }
+
+// Start the program
+main();
