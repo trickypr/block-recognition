@@ -14,10 +14,11 @@ const mobileNet = require("@tensorflow-models/mobilenet");
 const knn = require("@tensorflow-models/knn-classifier");
 const tfnode = require("@tensorflow/tfjs-node");
 
+// Raspberry Pi specific utilities
+const { Gpio } = require("onoff");
+
 // Custom utilities for this program
-const { execPromise, Option } = require("./utils")
-
-
+const { execPromise, Option } = require("./utils");
 
 // =============================================================================
 // Constant config variables
@@ -46,7 +47,7 @@ const BELT_SENSOR_PIN = 1;
 /**
  * The binary value on the belt sensor pin when the belt should stop
  */
-const BELT_SENSOR_STOP = false
+const BELT_SENSOR_STOP = Gpio.HIGH;
 
 /**
  * The pin the servo motor for spinning the bucket will be connected to
@@ -57,21 +58,17 @@ const SERVO_PIN = 1;
  * The angles that the servo should go to for each category
  */
 const SERVO_ANGLES = {
-  "1": 0,
-  "2": 45,
-  "3": 90,
-  "4": 135,
-  "5": 180,
-}
-
-
+  1: 0,
+  2: 45,
+  3: 90,
+  4: 135,
+  5: 180,
+};
 
 // =============================================================================
 // Global variables
 let net;
 let classifier = knn.create();
-
-
 
 // =============================================================================
 // Main loop
@@ -120,9 +117,7 @@ async function main() {
   }
 }
 
-main()
-
-
+main();
 
 // =============================================================================
 // Step functions
@@ -130,21 +125,21 @@ main()
 /**
  * Uses `raspistill` to capture an image from the webcam. This is non-blocking and
  * may not return an output if there is an error
- * 
+ *
  * `raspistill` docs: https://www.raspberrypi.org/documentation/accessories/camera.html#raspistill
- * 
+ *
  * @returns {Promise<Option<string>>} An option for the path to the image
  */
 async function captureImage() {
   // If an error occurs, we will not return a value, so we want to use an option
   const path = new Option();
-  
+
   try {
     const consoleOutput = await execPromise("raspistill -o currentBlock.jpg");
-    
+
     // If there was an output from raspistill, output it to the console
     if (consoleOutput && consoleOutput != "") {
-      console.log("raspistill:")
+      console.log("raspistill:");
       console.log(consoleOutput);
     }
 
@@ -153,17 +148,17 @@ async function captureImage() {
   } catch (err) {
     // If there was an error, place it here
 
-    console.error("Raspistill triggered an error.")
+    console.error("Raspistill triggered an error.");
     console.log(err);
   }
 
-  return path
+  return path;
 }
 
 /**
  * This function will be responsible for classifying the image. It is asynchronous
  * to allow the robot to do other stuff (e.g. move the belt) in the background
- * 
+ *
  * @param {string} imagePath An option for the path to the image
  */
 async function classify(imagePath) {
@@ -179,9 +174,37 @@ async function classify(imagePath) {
 }
 
 async function incrementBelt() {
-  // TODO: Increment belt (requires hardware)
+  // Create an instance of each gpio required
+  const beltMotor = new Gpio(BELT_MOTOR_PIN, "out");
+  const beltSensor = new Gpio(BELT_SENSOR_PIN, "in");
+
+  // Create a variable to keep track of the belt sensor's state
+  let state = "waiting";
+
+  // Start the motor
+  beltMotor.writeSync(1);
+
+  // Watch the belt sensor
+  beltSensor.watch((err, value) => {
+    if (value == BELT_SENSOR_STOP && state != "waiting") {
+      state = "done";
+    }
+
+    if (value == (BELT_SENSOR_STOP ^ 1) && state == "waiting") {
+      state = "moving";
+    }
+  });
+
+  // Wait for belt sensor
+  while (state != "done") {
+    // Sleep program to prevent overloading the CPU
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+
+  // Stop the motor
+  beltMotor.writeSync(0);
 }
 
-async function rotateBucket(class) {
+async function rotateBucket(targetClass) {
   // TODO: Rotate bucket (requires hardware)
 }
