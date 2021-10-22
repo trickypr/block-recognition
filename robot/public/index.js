@@ -1,5 +1,3 @@
-const { math } = require("@tensorflow/tfjs-core");
-
 const classifierLocation = "/classifier.json";
 
 let socket;
