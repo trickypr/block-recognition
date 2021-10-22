@@ -43,9 +43,9 @@ async function main() {
     console.log("Classifying...");
 
     // Get the activation from mobilenet from the webcam.
-    const activation = (await this.network).infer(img, true);
+    const activation = (await network).infer(img, true);
     // Get the most likely class and confidence from the classifier module.
-    const result = await this.classifier.predictClass(activation);
+    const result = await classifier.predictClass(activation);
     console.log(result);
 
     // Send the result back to the server
