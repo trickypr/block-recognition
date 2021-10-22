@@ -5,8 +5,8 @@
 // =============================================================================
 // Imports
 
-// // Assorted nodejs utilities for working with the file system etc
-// const fs = require("fs");
+// Assorted nodejs utilities for working with the file system etc
+const fs = require("fs");
 
 // // AI utilities
 // const tf = require("@tensorflow/tfjs");
@@ -137,7 +137,12 @@ async function captureImage() {
   const path = new Option();
 
   try {
-    const consoleOutput = await execPromise("raspistill -o currentBlock.jpg");
+    if (fs.existsSync("public/currentBlock.jpg"))
+      fs.unlinkSync("public/currentBlock.jpg");
+
+    const consoleOutput = await execPromise(
+      "raspistill -o public/currentBlock.jpg"
+    );
 
     // If there was an output from raspistill, output it to the console
     if (consoleOutput && consoleOutput != "") {
@@ -145,8 +150,9 @@ async function captureImage() {
       console.log(consoleOutput);
     }
 
-    // Set the image path
-    path.set("currentBlock.jpg");
+    // Set the image path. This is relative to the express web server, not the
+    // file system
+    path.set("/currentBlock.jpg");
   } catch (err) {
     // If there was an error, place it here
 
