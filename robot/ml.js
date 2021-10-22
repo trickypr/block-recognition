@@ -163,6 +163,14 @@ async function captureImage() {
   return path;
 }
 
+const classes = {
+  1: "axel",
+  2: "connectors",
+  3: "decorations",
+  4: "fasteners",
+  5: "gears",
+};
+
 /**
  * This function will be responsible for classifying the image. It is asynchronous
  * to allow the robot to do other stuff (e.g. move the belt) in the background
@@ -176,7 +184,11 @@ async function captureImage() {
  */
 async function classify(imagePath, socket) {
   const classifyPromise = new Promise((resolve, reject) => {
-    socket.once("classified", (data) => resolve(data));
+    socket.once("classified", (data) => {
+      console.log("Classified:", classes[Number(data)]);
+
+      resolve(data);
+    });
   });
 
   socket.emit("classify", imagePath);
