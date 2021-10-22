@@ -1,3 +1,5 @@
+const { math } = require("@tensorflow/tfjs-core");
+
 const classifierLocation = "/classifier.json";
 
 let socket;
@@ -37,7 +39,7 @@ async function main() {
         console.log(e);
         throw e;
       };
-      img.src = imagePath;
+      img.src = imagePath + "?c=" + Math.random() * 10000000;
     });
 
     console.log("Classifying...");
