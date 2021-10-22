@@ -8,7 +8,7 @@ const io = new Server(server);
 
 const ml = require("./ml");
 
-const isOnPi = false;
+const isOnPi = true;
 
 app.use(express.static("public"));
 
