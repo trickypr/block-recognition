@@ -12,11 +12,11 @@ const isOnPi = true;
 
 app.use(express.static("public"));
 
-io.on("connection", () => {
+io.on("connection", (socket) => {
   console.log("Front end has started");
 
   if (isOnPi) {
-    ml();
+    ml(socket);
   }
 });
 
