@@ -30,18 +30,15 @@ async function main() {
   // Listen for classify message from the server
   socket.on("classify", async (imagePath) => {
     console.log("Loading image...");
-    const img =
-      (await new Promise()) <
-      HTMLImageElement >
-      ((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = (e) => {
-          console.log(e);
-          throw e;
-        };
-        img.src = url;
-      });
+    const img = await new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = (e) => {
+        console.log(e);
+        throw e;
+      };
+      img.src = url;
+    });
 
     console.log("Classifying...");
 
