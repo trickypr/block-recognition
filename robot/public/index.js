@@ -37,13 +37,13 @@ async function main() {
         console.log(e);
         throw e;
       };
-      img.src = url;
+      img.src = imagePath;
     });
 
     console.log("Classifying...");
 
     // Get the activation from mobilenet from the webcam.
-    const activation = (await this.network).infer(testImg, true);
+    const activation = (await this.network).infer(img, true);
     // Get the most likely class and confidence from the classifier module.
     const result = await this.classifier.predictClass(activation);
     console.log(result);
