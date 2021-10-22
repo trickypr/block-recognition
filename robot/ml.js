@@ -5,14 +5,14 @@
 // =============================================================================
 // Imports
 
-// Assorted nodejs utilities for working with the file system etc
-const fs = require("fs");
+// // Assorted nodejs utilities for working with the file system etc
+// const fs = require("fs");
 
-// AI utilities
-const tf = require("@tensorflow/tfjs");
-const mobileNet = require("@tensorflow-models/mobilenet");
-const knn = require("@tensorflow-models/knn-classifier");
-const tfnode = require("@tensorflow/tfjs-node");
+// // AI utilities
+// const tf = require("@tensorflow/tfjs");
+// const mobileNet = require("@tensorflow-models/mobilenet");
+// const knn = require("@tensorflow-models/knn-classifier");
+// const tfnode = require("@tensorflow/tfjs-node");
 
 // Raspberry Pi specific utilities
 const { Gpio } = require("onoff");
@@ -30,7 +30,7 @@ const { execPromise, Option } = require("./utils");
 /**
  * Location of the classifier file exported from the web trainer
  */
-const CLASSIFIER_LOCATION = "path/to/classifier.json";
+const CLASSIFIER_LOCATION = "./classifier.json";
 
 // ------------------
 // Hardware constants
@@ -68,36 +68,36 @@ const SERVO_ANGLES = {
 
 // =============================================================================
 // Global variables
-let net;
-let classifier = knn.create();
+// let net;
+// let classifier = knn.create();
 
 // =============================================================================
 // Main loop
 
-async function main() {
+async function main(socket) {
   // This is in an asynchronous function because top level async-await is not
   // stable in node / v8 yet
 
   console.log("Robot sorter");
   console.log("============");
   console.log();
-  process.stdout.write("Loading mobilenet... ");
+  // process.stdout.write("Loading mobilenet... ");
 
-  // Wait for mobilenet to load before continuing
-  net = await mobileNet.load();
-  process.stdout.write("Done\n");
-  process.stdout.write("Loading classifier... ");
+  // // Wait for mobilenet to load before continuing
+  // net = await mobileNet.load();
+  // process.stdout.write("Done\n");
+  // process.stdout.write("Loading classifier... ");
 
-  // Load the classifier from file. This should be trained on the
-  // web front end on a more powerful computer
-  // https://block-recognition.pages.dev/
-  classifier.setClassifierDataset(
-    Object.fromEntries(
-      JSON.parse(fs.readFileSync(CLASSIFIER_LOCATION).toString()).map(
-        ([label, data, shape]) => [label, tf.tensor(data, shape)]
-      )
-    )
-  );
+  // // Load the classifier from file. This should be trained on the
+  // // web front end on a more powerful computer
+  // // https://block-recognition.pages.dev/
+  // classifier.setClassifierDataset(
+  //   Object.fromEntries(
+  //     JSON.parse(fs.readFileSync(CLASSIFIER_LOCATION).toString()).map(
+  //       ([label, data, shape]) => [label, tf.tensor(data, shape)]
+  //     )
+  //   )
+  // );
 
   process.stdout.write("Done\n");
 
@@ -106,7 +106,10 @@ async function main() {
     const image = await captureImage();
 
     // Start the image classifier the image
-    const classPromise = classify(image.unwrapOrError("No image captured"));
+    const classPromise = classify(
+      image.unwrapOrError("No image captured"),
+      socket
+    );
 
     // Increment the belt
     await incrementBelt();
@@ -165,16 +168,14 @@ async function captureImage() {
  *
  * @param {string} imagePath An option for the path to the image
  */
-async function classify(imagePath) {
-  // Load the image from the local file system and convert it to a tensor (nodejs only)
-  const imageBuffer = fs.readFileSync(imagePath);
-  const image = tfnode.node.decodeImage(imageBuffer);
+async function classify(imagePath, socket) {
+  const classifyPromise = new Promise((resolve, reject) => {
+    socket.once("classified", (data) => resolve(data));
+  });
 
-  // Collet the activations from mobilenet and pass that through
-  // pretrained classifier
-  const activation = (await net).infer(image);
+  socket.emit("classify", imagePath);
 
-  return (await classifier.predictClass(activation)).label;
+  return classifyPromise;
 }
 
 async function incrementBelt() {
@@ -237,4 +238,4 @@ async function rotateBucket(targetClass) {
 }
 
 // Start the program
-main();
+module.exports = main;
