@@ -38,7 +38,7 @@ const CLASSIFIER_LOCATION = "./classifier.json";
 /**
  * The pin that the motor for rotating the conveyer belt is connected to
  */
-const BELT_MOTOR_PINS = [1, 2, 3, 4];
+const BELT_MOTOR_PINS = [6, 13, 19, 26];
 
 /**
  * The amount of times the stepper needs to run to increment once
