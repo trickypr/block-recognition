@@ -5,9 +5,6 @@ let network = mobilenet.load();
 let classifier = knnClassifier.create();
 
 async function main() {
-  console.log("Connecting to pi...");
-  socket = io();
-
   console.log("Loading classifier...");
 
   const classifierData = await (await fetch(classifierLocation)).json();
@@ -26,6 +23,9 @@ async function main() {
 
   console.log("Loading network...");
   await network;
+
+  console.log("Connecting to pi...");
+  socket = io();
 
   // Listen for classify message from the server
   socket.on("classify", async (imagePath) => {
