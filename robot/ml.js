@@ -102,8 +102,12 @@ async function main(socket) {
   process.stdout.write("Done\n");
 
   while (true) {
+    console.log("Capturing image...");
+
     // Capture an image from the robot's camera
     const image = await captureImage();
+
+    console.log("Classifying image...");
 
     // Start the image classifier the image
     const classPromise = classify(
