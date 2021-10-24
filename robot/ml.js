@@ -240,7 +240,7 @@ async function incrementBelt() {
 
   // Reset all of the pins to 0
   for (const pin of BELT_MOTOR_PINS) {
-    beltMotorControl[pin].writeSync(Gpio.LOW);
+    pin.writeSync(Gpio.LOW);
   }
 }
 
