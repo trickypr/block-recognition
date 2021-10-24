@@ -227,7 +227,7 @@ async function incrementBelt() {
       out != 0x08 ? (out = out << 1) : (out = 0x01);
     } else {
       // ring shift right
-      out != 0x01 ? (out = out >> 1) : (out = 0x08);
+      0x01 ? (out = out >> 1) : (out = 0x08);
     }
 
     console.log(out);
