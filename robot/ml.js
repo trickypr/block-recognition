@@ -43,7 +43,7 @@ const BELT_MOTOR_PINS = [6, 13, 19, 26];
 /**
  * The amount of times the stepper needs to run to increment once
  */
-const BELT_FULL_ROTATION = 50;
+const BELT_FULL_ROTATION = 10000;
 
 /**
  * The pin the servo motor for spinning the bucket will be connected to
@@ -200,14 +200,15 @@ async function classify(imagePath, socket) {
   return classifyPromise;
 }
 
+const beltMotorControl = [];
+
+for (const pin of BELT_MOTOR_PINS) {
+  beltMotorControl.push(new Gpio(pin, "out"));
+}
+
 async function incrementBelt() {
   // This code has been adapted from the freenove tutorial
   // https://raw.githubusercontent.com/Freenove/Freenove_Ultimate_Starter_Kit/master/Tutorial.pdf
-  const beltMotorControl = [];
-
-  for (const pin of BELT_MOTOR_PINS) {
-    beltMotorControl.push(new Gpio(pin, "out"));
-  }
 
   // Define a variable, use four low bit to indicate the state of port
   moveBeltOne();
@@ -215,6 +216,7 @@ async function incrementBelt() {
   // Move belt the defined number of times
   for (let i = 0; i < BELT_FULL_ROTATION; i++) {
     moveBeltOne();
+    await sleep(10);
   }
 
   function moveBeltOne() {
@@ -232,6 +234,11 @@ async function incrementBelt() {
     for (let i = 0; i < 4; i++) {
       beltMotorControl[i].writeSync(out & (0x01 << i) ? Gpio.HIGH : Gpio.LOW);
     }
+  }
+
+  // Reset all of the pins to 0
+  for (const pin of BELT_MOTOR_PINS) {
+    beltMotorControl[pin].writeSync(Gpio.LOW);
   }
 }
 
@@ -261,3 +268,12 @@ async function rotateBucket(targetClass) {
 
 // Start the program
 module.exports = main;
+
+/**
+ * Sleep for a given number of milliseconds
+ * @param {number} arg0
+ * @returns {Promise<void>}
+ */
+function sleep(arg0) {
+  return new Promise((resolve) => setTimeout(resolve, arg0));
+}
