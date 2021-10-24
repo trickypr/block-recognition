@@ -219,8 +219,9 @@ async function incrementBelt() {
     await sleep(10);
   }
 
+  let out = 0x01;
+
   function moveBeltOne() {
-    let out = 0x01;
     // Decide the shift direction according to the rotation direction
     if (false) {
       // ring shift left
