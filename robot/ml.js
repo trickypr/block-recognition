@@ -43,7 +43,7 @@ const BELT_MOTOR_PINS = [6, 13, 19, 26];
 /**
  * The amount of times the stepper needs to run to increment once
  */
-const BELT_FULL_ROTATION = 10000;
+const BELT_FULL_ROTATION = 5;
 
 /**
  * The pin the servo motor for spinning the bucket will be connected to
@@ -229,6 +229,8 @@ async function incrementBelt() {
       // ring shift right
       out != 0x01 ? (out = out >> 1) : (out = 0x08);
     }
+
+    console.log(out);
 
     // Output signal to each port
     for (let i = 0; i < 4; i++) {
