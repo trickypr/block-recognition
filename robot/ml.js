@@ -43,7 +43,7 @@ const BELT_MOTOR_PINS = [6, 13, 19, 26];
 /**
  * The amount of times the stepper needs to run to increment once
  */
-const BELT_FULL_ROTATION = 5;
+const BELT_FULL_ROTATION = 100;
 
 /**
  * The pin the servo motor for spinning the bucket will be connected to
@@ -215,10 +215,12 @@ async function incrementBelt() {
   // Define a variable, use four low bit to indicate the state of port
   moveBeltOne();
 
+  await sleep(20);
+
   // Move belt the defined number of times
   for (let i = 0; i < BELT_FULL_ROTATION; i++) {
     moveBeltOne();
-    await sleep(10);
+    await sleep(20);
   }
 
   function moveBeltOne() {
