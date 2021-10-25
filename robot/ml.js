@@ -43,7 +43,7 @@ const BELT_MOTOR_PINS = [6, 13, 19, 26];
 /**
  * The amount of times the stepper needs to run to increment once
  */
-const BELT_FULL_ROTATION = 1000;
+const BELT_FULL_ROTATION = 4000;
 
 const BELT_SPEED = 2;
 
