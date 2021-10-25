@@ -147,7 +147,7 @@ async function captureImage() {
       fs.unlinkSync("public/currentBlock.jpg");
 
     const consoleOutput = await execPromise(
-      "raspistill -o public/currentBlock.jpg --width 1000 --height 1000"
+      "raspistill -n -o public/currentBlock.jpg --width 1000 --height 1000"
     );
 
     // If there was an output from raspistill, output it to the console
