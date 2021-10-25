@@ -1,6 +1,7 @@
 const classifierLocation = "/classifier.json";
 
 const currentImage = document.getElementById("current");
+const loggerEl = document.getElementById("logOutput");
 
 let socket;
 let network = mobilenet.load();
@@ -28,6 +29,8 @@ async function main() {
 
   console.log("Connecting to pi...");
   socket = io();
+
+  socket.on("log", (msg) => (loggerEl.innerHTML += msg + "\n"));
 
   // Listen for classify message from the server
   socket.on("classify", async (imagePath) => {

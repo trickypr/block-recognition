@@ -21,6 +21,20 @@ const execPromise = (cmd) =>
     })
   );
 
+let loggerFunc = null;
+
+function initializeLogger(socket) {
+  loggerFunc = (msg) => socket.emit("log", msg);
+}
+
+function log(msg) {
+  console.log(msg);
+
+  if (loggerFunc) {
+    loggerFunc(msg);
+  }
+}
+
 /**
  * I have gotten to used to rust's option for memory stafety, so I have written
  * a custom implementation
@@ -89,4 +103,6 @@ class Option {
 module.exports = {
   execPromise,
   Option,
+  initializeLogger,
+  log,
 };
