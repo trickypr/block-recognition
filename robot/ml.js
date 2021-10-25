@@ -79,25 +79,6 @@ async function main(socket) {
   log("Robot sorter");
   log("============");
   log();
-  // process.stdout.write("Loading mobilenet... ");
-
-  // // Wait for mobilenet to load before continuing
-  // net = await mobileNet.load();
-  // process.stdout.write("Done\n");
-  // process.stdout.write("Loading classifier... ");
-
-  // // Load the classifier from file. This should be trained on the
-  // // web front end on a more powerful computer
-  // // https://block-recognition.pages.dev/
-  // classifier.setClassifierDataset(
-  //   Object.fromEntries(
-  //     JSON.parse(fs.readFileSync(CLASSIFIER_LOCATION).toString()).map(
-  //       ([label, data, shape]) => [label, tf.tensor(data, shape)]
-  //     )
-  //   )
-  // );
-
-  process.stdout.write("Done\n");
 
   while (true) {
     log("Capturing image...");

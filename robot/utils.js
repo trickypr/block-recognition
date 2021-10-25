@@ -24,7 +24,7 @@ const execPromise = (cmd) =>
 let loggerFunc = null;
 
 function initializeLogger(socket) {
-  loggerFunc = (msg) => socket.emit("log", msg);
+  loggerFunc = (msg = "") => socket.emit("log", msg);
 }
 
 function log(msg) {
