@@ -94,11 +94,11 @@ async function main(socket) {
       socket
     );
 
-    // Increment the belt
-    await incrementBelt();
+    // // Increment the belt
+    // await incrementBelt();
 
-    // Rotate the bucket to the class
-    await rotateBucket(await classPromise);
+    // // Rotate the bucket to the class
+    // await rotateBucket(await classPromise);
 
     // The sorting has completed and the loop can repeat
   }
