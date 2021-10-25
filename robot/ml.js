@@ -94,8 +94,8 @@ async function main(socket) {
       socket
     );
 
-    // // Increment the belt
-    // await incrementBelt();
+    // Increment the belt
+    await incrementBelt();
 
     // // Rotate the bucket to the class
     // await rotateBucket(await classPromise);
