@@ -210,6 +210,8 @@ async function incrementBelt() {
   // This code has been adapted from the freenove tutorial
   // https://raw.githubusercontent.com/Freenove/Freenove_Ultimate_Starter_Kit/master/Tutorial.pdf
 
+  let out = 0x01;
+
   // Define a variable, use four low bit to indicate the state of port
   moveBeltOne();
 
@@ -218,8 +220,6 @@ async function incrementBelt() {
     moveBeltOne();
     await sleep(10);
   }
-
-  let out = 0x01;
 
   function moveBeltOne() {
     // Decide the shift direction according to the rotation direction
