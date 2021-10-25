@@ -1,5 +1,7 @@
 const classifierLocation = "/classifier.json";
 
+const currentImage = document.getElementById("current");
+
 let socket;
 let network = mobilenet.load();
 let classifier = knnClassifier.create();
@@ -31,7 +33,7 @@ async function main() {
   socket.on("classify", async (imagePath) => {
     console.log("Loading image...");
     const img = await new Promise((resolve, reject) => {
-      const img = new Image();
+      const img = currentImage;
       img.onload = () => resolve(img);
       img.onerror = (e) => {
         console.log(e);
