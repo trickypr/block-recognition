@@ -45,6 +45,8 @@ const BELT_MOTOR_PINS = [6, 13, 19, 26];
  */
 const BELT_FULL_ROTATION = 10000;
 
+const BELT_SPEED = 5;
+
 /**
  * The pin the servo motor for spinning the bucket will be connected to
  */
@@ -215,12 +217,12 @@ async function incrementBelt() {
   // Define a variable, use four low bit to indicate the state of port
   moveBeltOne();
 
-  await sleep(10);
+  await sleep(BELT_SPEED);
 
   // Move belt the defined number of times
   for (let i = 0; i < BELT_FULL_ROTATION; i++) {
     moveBeltOne();
-    await sleep(10);
+    await sleep(BELT_SPEED);
   }
 
   function moveBeltOne() {
