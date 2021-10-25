@@ -100,6 +100,8 @@ async function main(socket) {
     // // Rotate the bucket to the class
     // await rotateBucket(await classPromise);
 
+    await classPromise;
+
     // The sorting has completed and the loop can repeat
   }
 }
