@@ -32,3 +32,5 @@ program
 program
   .description("Image classifier that runs on a raspberry pi")
   .addHelpCommand();
+
+program.parse(process.argv);
