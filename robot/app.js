@@ -23,7 +23,7 @@ program
 
     while (true) {
       await execPromise(
-        `raspistill -n -o data/${category}/${i}.jpg --width 1000 --height 1000 --timeout 0`
+        `raspistill -n -o data/${category}/${i}.jpg --width 1000 --height 1000 --timeout 1`
       );
 
       await incrementBelt();
