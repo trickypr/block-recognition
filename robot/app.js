@@ -6,7 +6,9 @@ const { execPromise } = require("./utils");
 
 const program = new Command();
 
-program.description("Image classifier that runs on a raspberry pi");
+program
+  .description("Image classifier that runs on a raspberry pi")
+  .addHelpCommand();
 
 program
   .command("run")
@@ -18,7 +20,7 @@ program
 program
   .command("data <category>")
   .description("Captures data to train the robot on")
-  .action((category) => {
+  .action(async (category) => {
     fs.mkdirSync(`./data/${category}`, { recursive: true });
     let i = 0;
 
