@@ -44,7 +44,7 @@ const BELT_SPEED = 2;
 /**
  * The pin the servo motor for spinning the bucket will be connected to
  */
-const SERVO_PIN = 1;
+const SERVO_PIN = 4;
 
 /**
  * How long it takes in seconds for the servo to go from 0 to 180 degrees (ms)
