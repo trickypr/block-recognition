@@ -79,6 +79,14 @@ async function main(socket) {
   log("Robot sorter");
   log("============");
   log();
+  log("Self test");
+  log("Belt...");
+  await incrementBelt();
+  log("Servo...");
+  for (const bucket in SERVO_ANGLES) {
+    log(bucket);
+    await rotateBucket(bucket);
+  }
 
   while (true) {
     log("Capturing image...");
