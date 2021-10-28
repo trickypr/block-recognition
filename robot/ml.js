@@ -253,8 +253,12 @@ async function rotateBucket(targetClass) {
     throw new Error("Invalid angle");
   }
 
+  console.log(`Rotating to ${angle}`);
+
   // Calculate target pulse width for servo
   const targetPulseWidth = (angle / 180) * 2000 + 500;
+
+  console.log(targetPulseWidth);
 
   // Write
   servo.servoWrite(targetPulseWidth);
