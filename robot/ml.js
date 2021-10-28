@@ -268,6 +268,7 @@ async function rotateBucket(targetClass) {
 
 // Start the program
 module.exports = main;
+module.exports.incrementBelt = incrementBelt;
 
 /**
  * Sleep for a given number of milliseconds

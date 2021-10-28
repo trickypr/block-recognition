@@ -1,5 +1,6 @@
 const { Command } = require("commander");
 const fs = require("fs");
+const { incrementBelt } = require("./ml");
 
 const createServer = require("./server");
 const { execPromise } = require("./utils");
@@ -24,6 +25,8 @@ program
       await execPromise(
         `raspistill -n -o data/${category}/${i}.jpg --width 1000 --height 1000 --timeout 0`
       );
+
+      await incrementBelt();
 
       i++;
     }
