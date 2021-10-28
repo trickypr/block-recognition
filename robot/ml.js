@@ -97,8 +97,8 @@ async function main(socket) {
     // Increment the belt
     await incrementBelt();
 
-    // // Rotate the bucket to the class
-    // await rotateBucket(await classPromise);
+    // Rotate the bucket to the class
+    await rotateBucket(await classPromise);
 
     await classPromise;
 
@@ -238,7 +238,7 @@ let servo = new PWMGpio(SERVO_PIN, { mode: PWMGpio.OUTPUT });
  */
 async function rotateBucket(targetClass) {
   // Get the angle for the target class
-  const angle = SERVO_ANGLES[targetClass];
+  const angle = SERVO_ANGLES[Number(targetClass)];
 
   // Check the angle
   if (angle < 0 || angle > 180) {
