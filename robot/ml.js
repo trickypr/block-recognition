@@ -55,11 +55,11 @@ const SERVO_TIMEOUT = 2000;
  * The angles that the servo should go to for each category
  */
 const SERVO_ANGLES = {
-  1: 5,
+  1: 0,
   2: 45,
   3: 90,
   4: 135,
-  5: 175,
+  5: 180,
 };
 
 // =============================================================================
