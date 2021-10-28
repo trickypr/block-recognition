@@ -256,7 +256,7 @@ async function rotateBucket(targetClass) {
   console.log(`Rotating to ${angle}`);
 
   // Calculate target pulse width for servo
-  const targetPulseWidth = Math.round((angle / 180) * 2000 + 500);
+  const targetPulseWidth = Math.round((angle / 180) * 1000 + 1000);
 
   console.log(targetPulseWidth);
 
