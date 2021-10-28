@@ -7,10 +7,6 @@ const { execPromise } = require("./utils");
 const program = new Command();
 
 program
-  .description("Image classifier that runs on a raspberry pi")
-  .addHelpCommand();
-
-program
   .command("run")
   .description(
     "Starts the primary robot process and web server. Requires an external computer running firefox to perform image classification"
@@ -32,3 +28,7 @@ program
       i++;
     }
   });
+
+program
+  .description("Image classifier that runs on a raspberry pi")
+  .addHelpCommand();
