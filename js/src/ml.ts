@@ -100,7 +100,7 @@ class Trainer {
 
       for (const example of thisClass.children) {
         examples.push(this.addExample(classId, example.path));
-        await sleep(10);
+        await sleep(1000);
       }
     }
 
